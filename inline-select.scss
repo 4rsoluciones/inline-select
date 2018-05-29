@@ -1,0 +1,18 @@
+inline-select {
+  width: 100%;
+  overflow-x: scroll;
+  white-space: nowrap;
+  .is-option {
+    padding: 8px;
+    border-radius: 2px;
+    border: 2px solid #eeeeee;
+    margin-right: 5px;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    &.selected {
+      color: color($colors, primary);
+      border-color: color($colors, primary);
+    }
+  }
+}
