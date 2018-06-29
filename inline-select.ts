@@ -108,10 +108,18 @@ export class InlineSelect extends BaseInput<any> implements OnDestroy {
         if (option.selected) {
           let opElem = document.getElementById(option.elemId);
           if (opElem) {
-            opElem.scrollIntoView({block: 'center'});
+            this._scrollIntoViewH(opElem);
           }
         }
       })
+    }
+  }
+
+  _scrollIntoViewH(elem: HTMLElement) {
+    if (elem.parentElement.scrollLeft > (elem.offsetLeft - elem.parentElement.offsetLeft)) {
+      elem.parentElement.scrollTo(elem.offsetLeft - elem.parentElement.offsetLeft, 0);
+    } else if ((elem.parentElement.offsetWidth + elem.parentElement.scrollLeft) < (elem.offsetLeft + elem.offsetWidth - elem.parentElement.offsetLeft)) {
+      elem.parentElement.scrollTo((elem.offsetLeft + elem.offsetWidth - elem.parentElement.offsetLeft - elem.parentElement.offsetWidth), 0);
     }
   }
 
