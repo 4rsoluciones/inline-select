@@ -29,7 +29,7 @@ import {DomSanitizer} from "@angular/platform-browser";
   encapsulation: ViewEncapsulation.None
 })
 export class InlineSelect extends BaseInput<any> implements OnDestroy {
-
+  _verticalScrollIntoView: boolean = false;
   _multi: boolean = false;
   _options: QueryList<InlineOption>;
   _compareWith: (o1: any, o2: any) => boolean = isCheckedProperty;
@@ -61,6 +61,15 @@ export class InlineSelect extends BaseInput<any> implements OnDestroy {
   }
 
   @Input()
+  get verticalScrollIntoView(): any {
+    return this._verticalScrollIntoView;
+  }
+
+  set verticalScrollIntoView(val: any) {
+    this._verticalScrollIntoView = isTrueProperty(val);
+  }
+
+  @Input()
   get multiple(): any {
     return this._multi;
   }
@@ -72,7 +81,7 @@ export class InlineSelect extends BaseInput<any> implements OnDestroy {
   @ContentChildren(InlineOption)
   set options(val: QueryList<InlineOption>) {
     val.forEach((item: InlineOption, index: number) => {
-      item.elemId = 'is-option-' + index;
+      item.elemId = this.id + '-is-option-' + index;
     });
     this._options = val;
     const values = this.getValues();
@@ -108,18 +117,21 @@ export class InlineSelect extends BaseInput<any> implements OnDestroy {
         if (option.selected) {
           let opElem = document.getElementById(option.elemId);
           if (opElem) {
-            this._scrollIntoViewH(opElem);
+            this._scrollIntoView(opElem);
           }
         }
       })
     }
   }
 
-  _scrollIntoViewH(elem: HTMLElement) {
+  _scrollIntoView(elem: HTMLElement) {
     if (elem.parentElement.scrollLeft > (elem.offsetLeft - elem.parentElement.offsetLeft)) {
       elem.parentElement.scrollTo(elem.offsetLeft - elem.parentElement.offsetLeft, 0);
     } else if ((elem.parentElement.offsetWidth + elem.parentElement.scrollLeft) < (elem.offsetLeft + elem.offsetWidth - elem.parentElement.offsetLeft)) {
       elem.parentElement.scrollTo((elem.offsetLeft + elem.offsetWidth - elem.parentElement.offsetLeft - elem.parentElement.offsetWidth), 0);
+    }
+    if (this.verticalScrollIntoView) {
+      elem.parentElement.scrollIntoView(true);
     }
   }
 
